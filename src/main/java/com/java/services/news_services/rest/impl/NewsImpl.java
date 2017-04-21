@@ -30,22 +30,19 @@ public class NewsImpl implements NewsService {
     
     @Override
     public Response getAllNews(int limit) {
+
+    	System.out.println("*****LIMIT ****"+limit);
     	
-        //Test test = new Test();
-        //test.setId(9L);
-       // test.setName("Test2");
-        
-       // entityManager.persist(test);
-        
-        
-        System.out.println(entityManager.getProperties().toString());
         List<News> result = entityManager.createQuery( "Select n From News as n", News.class ).getResultList();
+        
         System.out.println("*********"+result.size());
+        
         for ( News news : result ) {
             System.out.println( "Test (" + news.getTitle() + ") : " + news.getNewsID() );
         }
         
         log.debug("hello world");
+        
     	return Response.status(Response.Status.OK.getStatusCode()).entity(result).build();
     	
     }
