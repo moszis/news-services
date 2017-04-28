@@ -1,5 +1,6 @@
 package com.java.services.news_services.rest.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -10,8 +11,10 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.java.services.news_services.dto.NewsDTO;
 import com.java.services.news_services.entity.News;
 import com.java.services.news_services.rest.NewsService;
+import com.java.services.news_services.source_clients.twitter.TwitterRestClient;
 
 @Stateless
 public class NewsImpl implements NewsService {
@@ -20,13 +23,13 @@ public class NewsImpl implements NewsService {
 	
     @PersistenceContext(unitName = "testjpa")
     protected EntityManager entityManager;
-    
-    
+   
+
     @Override
     public Response getAllNews() {
     	return getAllNews(0);
     }
-    
+
     
     @Override
     public Response getAllNews(int limit) {
@@ -41,9 +44,18 @@ public class NewsImpl implements NewsService {
             System.out.println( "Test (" + news.getTitle() + ") : " + news.getNewsID() );
         }
         
-        log.debug("hello world");
+        List<NewsDTO> newsList = new ArrayList<NewsDTO>();
+        try{
+            TwitterRestClient trc = new TwitterRestClient();
+            newsList = trc.getDefaultTimeline();
+        }catch(Exception e){
+            log.error(""+e);
+        }
         
-    	return Response.status(Response.Status.OK.getStatusCode()).entity(result).build();
+        
+        log.error("hello world");
+        
+    	return Response.status(Response.Status.OK.getStatusCode()).entity(newsList).build();
     	
     }
 }
