@@ -1,8 +1,8 @@
 package com.java.services.news_services.rest.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.java.services.news_services.entity.News;
 import com.java.services.news_services.rest.NewsService;
 
-import com.java.services.content_generation.source_clients.twitter.*;
+import com.java.services.content_generation.source_clients.twitter.TwitterRestClient;
 
 @Stateless
 public class NewsImpl implements NewsService {
@@ -24,7 +24,9 @@ public class NewsImpl implements NewsService {
     @PersistenceContext(unitName = "testjpa")
     protected EntityManager entityManager;
    
-
+    @EJB
+    protected TwitterRestClient twitterRestClient;
+    
     @Override
     public Response getAllNews() {
     	return getAllNews(0);
@@ -34,7 +36,7 @@ public class NewsImpl implements NewsService {
     @Override
     public Response getAllNews(int limit) {
 
-    	System.out.println("*****LIMIT ****"+limit);
+    	System.out.println("*****LIMIT XXXXXXX222 ****"+limit);
     	
         List<News> result = entityManager.createQuery( "Select n From News as n", News.class ).getResultList();
         
@@ -45,8 +47,8 @@ public class NewsImpl implements NewsService {
         }
         
         try{
-            TwitterRestClient trc = new TwitterRestClient();
-            trc.getDefaultTimeline();
+
+            twitterRestClient.getDefaultTimeline();
         }catch(Exception e){
             log.error("Error here?? why.. "+e);
         }

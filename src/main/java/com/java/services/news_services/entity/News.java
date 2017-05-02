@@ -19,7 +19,7 @@ public class News implements Serializable{
 
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name = "NewsID", nullable = false)
+    @Column(name = "NewsID", columnDefinition = "Decimal(10,0)")
 	private long newsID;
 	
 	@Column(name="Title")
